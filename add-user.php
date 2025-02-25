@@ -10,9 +10,13 @@
     $username=$_POST['username'];
     $pw=md5($_POST['password']);
     $rpw=md5($_POST['repassword']);
-
-    $insert="INSERT INTO user_table(user_name,user_phone,user_email,user_username,user_password)
-    VALUES('$name','$phone','$email','$username','$pw')";
+    $image=$_FILES['photo'];
+    $image_name='';
+    if($image['name']!=''){
+      $image_name='U'.time().'-'.rand(100000,100000000).'.'.pathinfo($image['name'],PATHINFO_EXTENSION);
+    }
+    $insert="INSERT INTO user_table(user_name,user_phone,user_email,user_username,user_password,user_photo)
+    VALUES('$name','$phone','$email','$username','$pw','$image_name')";
 
     if(!empty($name)){
       if(!empty($email)){
@@ -21,6 +25,7 @@
             if(!empty($rpw)){
               if(!empty($pw===$rpw)){
                 if(mysqli_query($con,$insert)){
+                  move_uploaded_file($image['tmp_name'],'uploads/'.$image_name);
                   echo "Sucessfully registration.";
                 }else{
                   echo "Opps! registration failed.";
@@ -47,7 +52,7 @@
 ?>
   <div class="row">
       <div class="col-md-12 ">
-          <form method="post" action="">
+          <form method="post" action="" enctype="multipart/form-data">
               <div class="card mb-3">
                 <div class="card-header">
                   <div class="row">
@@ -94,6 +99,20 @@
                       <label class="col-sm-3 col-form-label col_form_label">Confirm-Password<span class="req_star">*</span>:</label>
                       <div class="col-sm-7">
                         <input type="password" class="form-control form_control" id="" name="repassword">
+                      </div>
+                      <div class="row mb-3">
+                      <label class="col-sm-3 col-form-label col_form_label mt-3">User Role<span class="req_star">*</span>:</label>
+                      <div class="col-sm-4 mb-3 mt-3">
+                        <select class="form-control form_control" id="" name="">
+                          <option value="">Select Role</option>
+                          <option value="">SuperAdmin</option>
+                          <option value="">Admin</option>
+                        </select>
+                      </div>
+                      <div class="row mb-3">
+                      <label class="col-sm-3 col-form-label col_form_label">Photo:</label>
+                      <div class="col-sm-7">
+                        <input type="file" class="form-control form_control" id="" name="photo">
                       </div>
                     </div>
                 <div class="card-footer text-center">

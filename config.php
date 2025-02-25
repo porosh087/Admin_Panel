@@ -1,5 +1,5 @@
 <?php
-  $db_name='admin-panel';
+  $db_name='admin_panel';
   $db_user='root';
   $db_pass='';
   $db_host='localhost';
